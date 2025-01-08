@@ -20,5 +20,4 @@ services:
 
 networks:
   npm:
-    external: true
     name: npm
