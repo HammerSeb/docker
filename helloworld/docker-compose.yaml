@@ -1,0 +1,10 @@
+services:
+  hello-world:
+    image: spuxx/nginx-hello-world
+    networks:
+      - npm
+
+networks:
+  npm:
+    external: true
+    name: npm
