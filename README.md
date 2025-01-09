@@ -102,7 +102,7 @@ We use Juypter-Notebook from [here](https://quay.io/repository/jupyter/base-note
 cd docker/jupyter
 docker compose up -d 
 ```
-we start the jupyter notebook container and we add a proxy host which forwards incoming traffic to port 8888, where the notebook app listens by default.
+we start the jupyter notebook container and we add a proxy host which forwards incoming traffic to port 8888, where the notebook app listens by default. Also we need to enable "Websockets Support" otherwise Jupyter will not be able to reach the Kernel.
 
 To access the notebook we need a token by default, which we can find by checking which jupyter servers are running
 
