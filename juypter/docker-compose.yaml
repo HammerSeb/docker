@@ -1,0 +1,10 @@
+services:
+  juypter:
+    image: quay.io/jupyter/base-notebook
+    networks:
+      - npm
+
+networks:
+  npm:
+    external: true
+    name: npm
