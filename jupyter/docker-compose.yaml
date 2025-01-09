@@ -1,5 +1,5 @@
 services:
-  juypter:
+  jupyter:
     image: quay.io/jupyter/base-notebook
     networks:
       - npm
