@@ -27,3 +27,8 @@ services:
 
 volumes:
   mealie-data:
+
+networks:
+  npm:
+    external: true
+    name: npm
