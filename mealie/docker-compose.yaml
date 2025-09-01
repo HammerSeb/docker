@@ -6,7 +6,7 @@ services:
     container_name: mealie
     restart: always
     ports:
-        - "9925:9000" # 
+        - "9000:9000" # 
 
 
     deploy:
@@ -22,8 +22,8 @@ services:
       ALLOW_SIGNUP: "false"
       PUID: 1000
       PGID: 1000
-      TZ: America/Anchorage
-      BASE_URL: https://mealie.yourdomain.com
+      TZ: Europe/Berlin
+      BASE_URL: https://mealie.hammersebastian.de
 
 volumes:
   mealie-data:
