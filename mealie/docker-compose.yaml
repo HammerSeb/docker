@@ -25,6 +25,8 @@ services:
       TZ: Europe/Berlin
       BASE_URL: https://mealie.hammersebastian.de
 
+    networks:
+      - npm
 volumes:
   mealie-data:
 
