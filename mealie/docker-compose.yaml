@@ -20,8 +20,8 @@ services:
     environment:
       # Set Backend ENV Variables Here
       ALLOW_SIGNUP: "false"
-      PUID: 1000
-      PGID: 1000
+      PUID: 9999
+      PGID: 9999
       TZ: Europe/Berlin
       BASE_URL: https://mealie.hammersebastian.de
 
