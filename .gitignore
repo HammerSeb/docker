@@ -1,0 +1,6 @@
+# environment variables
+.env
+.env.production
+
+# maria-db
+mariadb/.data
