@@ -1,0 +1,33 @@
+services:
+  collabora:
+    image: collabora/code:latest
+    container_name: collabora
+    restart: unless-stopped
+
+    # If you're using an existing reverse-proxy network (recommended),
+    # attach to it. Otherwise, you can remove "networks" and publish ports.
+    networks:
+      - npm
+    env_file:
+      - ./.env
+   
+    #cap_add:
+    # only use if permission errors occure
+    #  - MKNOD
+
+
+
+    # Collabora needs this internal port; reverse proxy will route to it
+    expose:
+      - "9980"
+
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9980/hosting/discovery"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+networks:
+  npm:
+    external: true
+    name: npm
