@@ -1,0 +1,27 @@
+services:
+  obsidian:
+    image: ghcr.io/linuxserver/obsidian:latest
+    container_name: obsidian
+    security_opt:
+      - no-new-privileges:true
+      # - seccomp:unconfined
+    healthcheck:
+      test: timeout 10s bash -c ':> /dev/tcp/127.0.0.1/3000' || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+  
+    shm_size: "2gb"
+    volumes:
+      - ./config:/config:rw
+    env_file:
+      - ./.env
+    networks:
+      - npm
+    restart: unless-stopped
+
+networks:
+  npm:
+    external: true
+    name: npm
