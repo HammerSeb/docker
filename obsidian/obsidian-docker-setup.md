@@ -2,9 +2,13 @@
 
 This guide covers a clean install of the `linuxserver/obsidian` Docker image, resource limits appropriate for constrained hosts, and the fix needed to make drag-and-drop / Selkies file uploads land inside your vault instead of vanishing.
 
+**_This guide was created with Claude Sonnet 5 (Medium) --- use with care_**
+
+The example vault is called **Labbook**, adjust this to your vault name. It will only work if you have one vault on this instance.
+
 ## Background: why the upload fix is needed
 
-The `linuxserver/obsidian` image uses **Selkies** to stream a virtual desktop to your browser. Selkies hardcodes its file-upload destination to `/config/Desktop`. Obsidian, however, only recognizes attachments that live *inside the vault folder* (e.g. `/config/Labbook`).
+The `linuxserver/obsidian` image uses **Selkies** to stream a virtual desktop to your browser. Selkies hardcodes its file-upload destination to `/config/Desktop`. Obsidian, however, only recognizes attachments that live _inside the vault folder_ (e.g. `/config/Labbook`).
 
 By default these are two separate folders, so uploaded files land in `/config/Desktop` and Obsidian can't find them via `![[filename]]` embeds.
 
@@ -14,7 +18,7 @@ By default these are two separate folders, so uploaded files land in `/config/De
 ERROR:data_websocket:Path escape attempt detected: '/config/Desktop/file.jpeg' is outside of '/config/Labbook/Attachments'. Discarding.
 ```
 
-The fix is a **bind mount**, not a symlink — this makes `/config/Desktop` and your vault's attachments folder the *same real directory* at the filesystem level, so no path resolution is involved and Selkies' check passes.
+The fix is a **bind mount**, not a symlink — this makes `/config/Desktop` and your vault's attachments folder the _same real directory_ at the filesystem level, so no path resolution is involved and Selkies' check passes.
 
 ---
 
@@ -73,7 +77,7 @@ services:
     image: ghcr.io/linuxserver/obsidian:latest
     container_name: obsidian
     security_opt:
-      - no-new-privileges:false
+      - no-new-privileges:true
       # - seccomp:unconfined   # only add back if you hit rendering/crash issues
     healthcheck:
       test: timeout 10s bash -c ':> /dev/tcp/127.0.0.1/3000' || exit 1
@@ -101,6 +105,7 @@ networks:
 ```
 
 Notes on the settings used here:
+
 - `mem_limit` / `cpus` — tune based on your host's available resources; check real usage with `docker stats obsidian` after some normal use and adjust.
 - `shm_size` — keep this comfortably below `mem_limit`; 512mb is normally sufficient for a single-user vault.
 - `seccomp:unconfined` — left commented out by default (more secure). Some Electron/Chromium rendering issues may require re-enabling it — test without it first.
@@ -113,9 +118,9 @@ Notes on the settings used here:
 **Stage 1: temporarily comment out the second volume line**
 
 ```yaml
-    volumes:
-      - ./config:/config:rw
-      # - ./config/Labbook/Attachments:/config/Desktop:rw
+volumes:
+  - ./config:/config:rw
+  # - ./config/Labbook/Attachments:/config/Desktop:rw
 ```
 
 Start the container:
@@ -154,9 +159,9 @@ chown 1000:1000 ./config/Desktop
 Now uncomment the second volume line in `docker-compose.yaml`:
 
 ```yaml
-    volumes:
-      - ./config:/config:rw
-      - ./config/Labbook/Attachments:/config/Desktop:rw
+volumes:
+  - ./config:/config:rw
+  - ./config/Labbook/Attachments:/config/Desktop:rw
 ```
 
 Recreate the container so the new mount takes effect (a plain `restart` does **not** pick up compose file changes):
