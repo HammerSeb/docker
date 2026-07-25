@@ -12,7 +12,7 @@ services:
       retries: 3
       start_period: 90s
   
-    shm_size: "2gb"
+    shm_size: "1gb"
     volumes:
       - ./config:/config:rw
     env_file:
